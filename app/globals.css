@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+/* Add refined design system */
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-feature-settings: "pnum" on, "lnum" on;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight text-gray-800;
+  }
+}
+
+@layer components {
+  /* Elegant card styling */
+  .luxury-card {
+    @apply bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+  
+  /* Refined button styling */
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium shadow-sm hover:shadow transition-all duration-200 ease-in-out;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium shadow-sm hover:shadow transition-all duration-200;
+  }
+  
+  /* Luxury form elements */
+  .form-input {
+    @apply px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200;
+  }
+  
+  /* Elegant section styling */
+  .section-container {
+    @apply max-w-7xl mx-auto p-4 md:p-8;
+  }
+  
+  /* Subtle animations */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+  
+  /* Stats card */
+  .stats-card {
+    @apply bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  /* Navigation item */
+  .nav-item {
+    @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200;
+  }
+  
+  /* Accent borders */
+  .accent-left-border {
+    @apply border-l-4 border-blue-500 pl-4;
+  }
+}
+
+/* For dashboard data visualization components */
+.chart-container {
+  @apply bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
+} 
