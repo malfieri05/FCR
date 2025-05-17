@@ -1,20 +1,26 @@
 import './globals.css'
+import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import ClientLayout from './ClientLayout';
+import NavBar from './NavBar'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'FairCarRepair - Get Competitive Repair Quotes',
-  description: 'Get competitive quotes from trusted mechanics in your area. Compare prices and reviews to find the best service for your car repair needs.',
+export const metadata: Metadata = {
+  title: 'Reppy Route - B2B Lead Distribution Platform',
+  description: 'Connect agencies, agents, and servicers for efficient lead distribution across multiple industries.',
+  keywords: 'lead distribution, B2B, agencies, agents, servicers, leads, campaigns',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
-        {/* You can keep your footer here if you have one */}
+        <NavBar />
+        <main>{children}</main>
       </body>
     </html>
   )

@@ -26,6 +26,7 @@ export default function NavBar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -155,6 +156,74 @@ export default function NavBar() {
     }, 300);
   };
 
+  if (loading) {
+    return null;
+  }
+
+  if (!userType) {
+    return (
+      <nav className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <Link href="/" className="text-2xl font-bold text-blue-600">
+                  Reppy Route
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <Link
+                href="/auth/signin"
+                className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              >
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
+  const getNavLinks = () => {
+    switch (userType) {
+      case 'admin':
+        return [
+          { href: '/dashboard/admin', label: 'Dashboard' },
+          { href: '/dashboard/admin/users', label: 'Users' },
+          { href: '/dashboard/admin/settings', label: 'Settings' },
+        ];
+      case 'agency':
+        return [
+          { href: '/dashboard/agency', label: 'Dashboard' },
+          { href: '/dashboard/agency/campaigns', label: 'Campaigns' },
+          { href: '/dashboard/agency/agents', label: 'Agents' },
+          { href: '/dashboard/agency/settings', label: 'Settings' },
+        ];
+      case 'agent':
+        return [
+          { href: '/dashboard/agent', label: 'Dashboard' },
+          { href: '/dashboard/agent/leads', label: 'Leads' },
+          { href: '/dashboard/agent/campaigns', label: 'Campaigns' },
+        ];
+      case 'servicer':
+        return [
+          { href: '/dashboard/servicer', label: 'Dashboard' },
+          { href: '/dashboard/servicer/leads', label: 'My Leads' },
+          { href: '/dashboard/servicer/campaigns', label: 'Browse Campaigns' },
+        ];
+      default:
+        return [];
+    }
+  };
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-100 z-50 sticky top-0 backdrop-blur-sm bg-white/90">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,7 +233,7 @@ export default function NavBar() {
               <span className="text-blue-600 font-bold text-xl tracking-tight">Fair Car Repair</span>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {navLinks.map((link) => (
+              {getNavLinks().map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
@@ -39,10 +40,21 @@ export default function SignIn() {
           .single()
 
         // Redirect based on user type
-        if (profile?.user_type === 'mechanic') {
-          router.push('/dashboard/mechanic')
-        } else {
-          router.push('/dashboard/owner')
+        switch (profile?.user_type) {
+          case 'admin':
+            router.push('/dashboard/admin')
+            break
+          case 'agency':
+            router.push('/dashboard/agency')
+            break
+          case 'agent':
+            router.push('/dashboard/agent')
+            break
+          case 'servicer':
+            router.push('/dashboard/servicer')
+            break
+          default:
+            router.push('/dashboard')
         }
       }
     } catch (error) {
@@ -55,7 +67,10 @@ export default function SignIn() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col pt-20 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+        <div className="flex justify-center">
+          <h1 className="text-4xl font-bold text-blue-600">Reppy Route</h1>
+        </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -66,7 +81,7 @@ export default function SignIn() {
         </p>
       </div>
 
-      <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSignIn}>
             <div>

@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [userType, setUserType] = useState<'car_owner' | 'mechanic'>('car_owner')
+  const [userType, setUserType] = useState<'agency' | 'agent' | 'servicer'>('agency')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -37,19 +38,25 @@ export default function SignUp() {
       if (error) throw error
 
       if (data.user) {
-        // If the user is a mechanic, create a mechanics row
-        if (userType === 'mechanic') {
-          await supabase.from('mechanics').insert({
+        // Create the appropriate record based on user type
+        if (userType === 'agency') {
+          await supabase.from('agencies').insert({
             id: data.user.id,
             business_name: '',
             business_address: '',
             business_phone: '',
             business_email: email,
-            service_radius: 10,
-            specialties: [],
-            certifications: [],
+          });
+        } else if (userType === 'servicer') {
+          await supabase.from('servicers').insert({
+            id: data.user.id,
+            business_name: '',
+            business_address: '',
+            business_phone: '',
+            business_email: email,
           });
         }
+        // Note: Agents will be created by their agency after signup
         router.push('/auth/verify-email')
       }
     } catch (error) {
@@ -62,7 +69,10 @@ export default function SignUp() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col pt-20 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+        <div className="flex justify-center">
+          <h1 className="text-4xl font-bold text-blue-600">Reppy Route</h1>
+        </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -73,7 +83,7 @@ export default function SignUp() {
         </p>
       </div>
 
-      <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSignUp}>
             <div>
@@ -121,14 +131,23 @@ export default function SignUp() {
                   id="userType"
                   name="userType"
                   value={userType}
-                  onChange={(e) => setUserType(e.target.value as 'car_owner' | 'mechanic')}
+                  onChange={(e) => setUserType(e.target.value as 'agency' | 'agent' | 'servicer')}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 >
-                  <option value="car_owner">Car Owner</option>
-                  <option value="mechanic">Mechanic</option>
+                  <option value="agency">Agency</option>
+                  <option value="agent">Agent</option>
+                  <option value="servicer">Servicer</option>
                 </select>
               </div>
             </div>
+
+            {userType === 'agent' && (
+              <div className="rounded-md bg-yellow-50 p-4">
+                <div className="text-sm text-yellow-700">
+                  Note: As an agent, you'll need to be invited by your agency after signing up.
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="rounded-md bg-red-50 p-4">

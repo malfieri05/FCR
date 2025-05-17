@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface DashboardStats {
   totalUsers: number;
@@ -19,6 +20,7 @@ interface User {
   full_name: string;
   user_type: string;
   created_at: string;
+  status: string;
 }
 
 interface JobRequest {
@@ -38,12 +40,34 @@ interface JobRequest {
   };
 }
 
+interface Agency {
+  id: string;
+  business_name: string;
+  status: string;
+  created_at: string;
+  profiles: {
+    email: string;
+  };
+}
+
+interface Servicer {
+  id: string;
+  business_name: string;
+  status: string;
+  created_at: string;
+  profiles: {
+    email: string;
+  };
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [jobRequests, setJobRequests] = useState<JobRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [servicers, setServicers] = useState<Servicer[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -129,6 +153,36 @@ export default function AdminDashboard() {
             }))
           );
         }
+
+        // Fetch agencies
+        const { data: agenciesData } = await supabase
+          .from('agencies')
+          .select(`
+            *,
+            profiles:profiles (
+              email
+            )
+          `)
+          .order('created_at', { ascending: false });
+
+        if (agenciesData) {
+          setAgencies(agenciesData);
+        }
+
+        // Fetch servicers
+        const { data: servicersData } = await supabase
+          .from('servicers')
+          .select(`
+            *,
+            profiles:profiles (
+              email
+            )
+          `)
+          .order('created_at', { ascending: false });
+
+        if (servicersData) {
+          setServicers(servicersData);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
         if (err instanceof Error && err.message === 'Unauthorized') {
@@ -141,6 +195,39 @@ export default function AdminDashboard() {
 
     fetchData();
   }, [router]);
+
+  const handleUpdateStatus = async (userId: string, newStatus: string, type: 'agency' | 'servicer') => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const { error } = await supabase
+      .from(type === 'agency' ? 'agencies' : 'servicers')
+      .update({ status: newStatus })
+      .eq('id', userId);
+
+    if (!error) {
+      // Refresh data
+      const { data } = await supabase
+        .from(type === 'agency' ? 'agencies' : 'servicers')
+        .select(`
+          *,
+          profiles:profiles (
+            email
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        if (type === 'agency') {
+          setAgencies(data);
+        } else {
+          setServicers(data);
+        }
+      }
+    }
+  };
 
   if (loading) {
     return <div className="text-center py-12">Loading...</div>;
@@ -260,6 +347,112 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* Agencies Section */}
+      <div className="bg-white shadow rounded-lg mb-8">
+        <div className="px-4 py-5 sm:px-6">
+          <h2 className="text-lg font-medium text-gray-900">Agencies</h2>
+        </div>
+        <div className="border-t border-gray-200">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {agencies.map((agency) => (
+                  <tr key={agency.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{agency.business_name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{agency.profiles.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        agency.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        agency.status === 'restricted' ? 'bg-red-100 text-red-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {agency.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(agency.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <select
+                        value={agency.status}
+                        onChange={(e) => handleUpdateStatus(agency.id, e.target.value, 'agency')}
+                        className="text-sm border-gray-300 rounded-md"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="restricted">Restricted</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Servicers Section */}
+      <div className="bg-white shadow rounded-lg">
+        <div className="px-4 py-5 sm:px-6">
+          <h2 className="text-lg font-medium text-gray-900">Servicers</h2>
+        </div>
+        <div className="border-t border-gray-200">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {servicers.map((servicer) => (
+                  <tr key={servicer.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{servicer.business_name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{servicer.profiles.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        servicer.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        servicer.status === 'restricted' ? 'bg-red-100 text-red-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {servicer.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(servicer.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <select
+                        value={servicer.status}
+                        onChange={(e) => handleUpdateStatus(servicer.id, e.target.value, 'servicer')}
+                        className="text-sm border-gray-300 rounded-md"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="restricted">Restricted</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
