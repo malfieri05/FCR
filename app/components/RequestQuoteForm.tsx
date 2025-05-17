@@ -37,7 +37,7 @@ export default function RequestQuoteForm({ mechanicId, onRequestSubmitted }: Req
           .from('job-request-photos')
           .upload(`${user.id}/${Date.now()}_${photo.name}`, photo);
         if (uploadError) throw uploadError;
-        photo_url = data?.path ? supabase.storage.from('job-request-photos').getPublicUrl(data.path).publicUrl : null;
+        photo_url = data?.path ? supabase.storage.from('job-request-photos').getPublicUrl(data.path).data.publicUrl : null;
       }
 
       const { error: insertError } = await supabase
