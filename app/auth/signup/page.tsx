@@ -47,6 +47,11 @@ export default function SignUp() {
             business_phone: '',
             business_email: email,
           });
+          await supabase.from('profiles').insert({
+            id: data.user.id,
+            email,
+            user_type: 'agency',
+          });
         } else if (userType === 'servicer') {
           await supabase.from('servicers').insert({
             id: data.user.id,
@@ -55,8 +60,18 @@ export default function SignUp() {
             business_phone: '',
             business_email: email,
           });
+          await supabase.from('profiles').insert({
+            id: data.user.id,
+            email,
+            user_type: 'servicer',
+          });
+        } else if (userType === 'agent') {
+          await supabase.from('profiles').insert({
+            id: data.user.id,
+            email,
+            user_type: 'agent',
+          });
         }
-        // Note: Agents will be created by their agency after signup
         router.push('/auth/verify-email')
       }
     } catch (error) {
