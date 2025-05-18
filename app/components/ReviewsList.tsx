@@ -46,7 +46,12 @@ export default function ReviewsList({ mechanicId }: ReviewsListProps) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setReviews(data as Review[]);
+      setReviews(
+        data.map((review) => ({
+          ...review,
+          user: review.user[0],
+        })) as Review[]
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load reviews');
     } finally {

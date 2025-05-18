@@ -1,6 +1,5 @@
 "use client";
 
-// This file has been modified to fix deployment issues
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
@@ -34,16 +33,11 @@ export default function RequestQuoteForm({ mechanicId, onRequestSubmitted }: Req
 
       let photo_url = null;
       if (photo) {
-        // Upload the photo
-        const filePath = `${user.id}/${Date.now()}_${photo.name}`;
-        const { error: uploadError } = await supabase.storage
+        const { data, error: uploadError } = await supabase.storage
           .from('job-request-photos')
-          .upload(filePath, photo);
-          
+          .upload(`${user.id}/${Date.now()}_${photo.name}`, photo);
         if (uploadError) throw uploadError;
-        
-        // Get the public URL using string concatenation instead
-        photo_url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/job-request-photos/${filePath}`;
+        photo_url = data?.path ? supabase.storage.from('job-request-photos').getPublicUrl(data.path).data.publicUrl : null;
       }
 
       const { error: insertError } = await supabase

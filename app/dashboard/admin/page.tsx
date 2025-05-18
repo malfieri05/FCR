@@ -121,7 +121,13 @@ export default function AdminDashboard() {
           .limit(5);
 
         if (recentRequests) {
-          setJobRequests(recentRequests);
+          setJobRequests(
+            recentRequests.map((request) => ({
+              ...request,
+              user_profile: request.user_profile[0],
+              mechanic_profile: request.mechanic_profile[0],
+            }))
+          );
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
