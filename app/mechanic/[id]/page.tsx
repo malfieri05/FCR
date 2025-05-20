@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import ReviewsSection from './ReviewsSection';
 import { useRouter } from 'next/navigation';
+import Modal from '../../components/Modal';
 
 export default function MechanicProfilePage({ params }: { params: { id: string } }) {
   const [mechanic, setMechanic] = useState<any>(null);
@@ -11,6 +12,7 @@ export default function MechanicProfilePage({ params }: { params: { id: string }
   const [error, setError] = useState<string | null>(null);
   const [msgLoading, setMsgLoading] = useState(false);
   const [msgError, setMsgError] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -51,6 +53,31 @@ export default function MechanicProfilePage({ params }: { params: { id: string }
 
   return (
     <div className="max-w-4xl mx-auto p-8">
+      <Modal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Create an Account to Continue"
+        description="Sign up or log in to message a mechanic, request quotes, and track your conversations."
+        mascotUrl="/mascot.png"
+        valueProp="Join thousands of car owners saving on repairs."
+        legal="By continuing, you agree to our Terms."
+        actions={
+          <>
+            <a
+              href="/auth/signup"
+              className="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 transition shadow-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              Create Account
+            </a>
+            <a
+              href="/auth/signin"
+              className="border border-blue-600 text-blue-600 px-5 py-2 rounded-md font-semibold hover:bg-blue-50 transition focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              Sign In
+            </a>
+          </>
+        }
+      />
       <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
         <h1 className="text-3xl font-bold mb-2">{mechanic.profiles?.full_name || 'Mechanic'}</h1>
         <div className="text-blue-600 font-semibold mb-2">{mechanic.business_name}</div>
@@ -77,7 +104,7 @@ export default function MechanicProfilePage({ params }: { params: { id: string }
             );
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
-              setMsgError('You must be logged in to message a mechanic.');
+              setShowAuthModal(true);
               setMsgLoading(false);
               return;
             }

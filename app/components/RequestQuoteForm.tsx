@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Modal from './Modal';
 
 interface RequestQuoteFormProps {
   mechanicId: string;
@@ -14,6 +15,7 @@ export default function RequestQuoteForm({ mechanicId, onRequestSubmitted }: Req
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +31,11 @@ export default function RequestQuoteForm({ mechanicId, onRequestSubmitted }: Req
     try {
       // Get the current user
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('You must be logged in to request a quote');
+      if (!user) {
+        setShowAuthModal(true);
+        setSubmitting(false);
+        return;
+      }
 
       let photo_url = null;
       if (photo) {
@@ -64,42 +70,69 @@ export default function RequestQuoteForm({ mechanicId, onRequestSubmitted }: Req
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Describe your issue or service needed
-        </label>
-        <textarea
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          rows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Optional photo
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-        />
-      </div>
-      {error && <div className="text-red-600 text-sm">{error}</div>}
-      {success && <div className="text-green-600 text-sm">Request submitted!</div>}
-      <button
-        type="submit"
-        disabled={submitting || !description}
-        className={`w-full px-4 py-2 rounded-lg text-white font-semibold
-          ${submitting || !description
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-      >
-        {submitting ? 'Submitting...' : 'Request Quote'}
-      </button>
-    </form>
+    <>
+      <Modal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Create an Account to Continue"
+        description="Sign up or log in to request a quote, track your requests, and get the best service."
+        mascotUrl="/mascot.png"
+        valueProp="Join thousands of car owners saving on repairs."
+        legal="By continuing, you agree to our Terms."
+        actions={
+          <>
+            <a
+              href="/auth/signup"
+              className="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 transition shadow-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              Create Account
+            </a>
+            <a
+              href="/auth/signin"
+              className="border border-blue-600 text-blue-600 px-5 py-2 rounded-md font-semibold hover:bg-blue-50 transition focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              Sign In
+            </a>
+          </>
+        }
+      />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Describe your issue or service needed
+          </label>
+          <textarea
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Optional photo
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+          />
+        </div>
+        {error && <div className="text-red-600 text-sm">{error}</div>}
+        {success && <div className="text-green-600 text-sm">Request submitted!</div>}
+        <button
+          type="submit"
+          disabled={submitting || !description}
+          className={`w-full px-4 py-2 rounded-lg text-white font-semibold
+            ${submitting || !description
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+        >
+          {submitting ? 'Submitting...' : 'Request Quote'}
+        </button>
+      </form>
+    </>
   );
 } 

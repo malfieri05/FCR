@@ -46,19 +46,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <NavBar />
       ) : (
         <div className="relative w-full z-20 backdrop-blur-sm bg-white/90 border-b border-gray-100 shadow-sm">
-          <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-4 h-16">
-            <div className="text-2xl font-bold text-blue-600 tracking-tight">Fair Car Repair</div>
-            <div className="flex items-center space-x-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-8 py-4 h-16">
+            <div className="text-xl sm:text-2xl font-bold text-blue-600 tracking-tight">Fair Car Repair</div>
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
                 href="/auth/signin"
-                className="btn-primary px-6 py-2 rounded-md font-medium hover-lift"
+                className="btn-primary px-3 sm:px-6 py-2 rounded-md font-medium hover-lift text-sm sm:text-base"
                 prefetch={true}
               >
                 Sign In
               </Link>
               <Link
                 href="/auth/signup"
-                className="btn-secondary px-5 py-2 rounded-md font-medium hover-lift"
+                className="btn-secondary px-3 sm:px-5 py-2 rounded-md font-medium hover-lift text-sm sm:text-base"
                 prefetch={true}
               >
                 Create Account
@@ -71,8 +71,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {children}
       </main>
       <footer className="bg-gray-800 text-white py-8 mt-auto">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-lg font-medium mb-4">Fair Car Repair</h3>
               <p className="text-gray-300 text-sm">

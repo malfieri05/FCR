@@ -2,12 +2,17 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
+import VehicleManagement from '@/app/components/VehicleManagement';
+import QuoteComparison from '@/app/components/QuoteComparison';
+import DocumentManagement from '@/app/components/DocumentManagement';
+import AnalyticsDashboard from '@/app/components/AnalyticsDashboard';
 
 export default function OwnerDashboard() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'vehicles' | 'documents' | 'analytics'>('overview');
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -59,14 +64,60 @@ export default function OwnerDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Welcome Banner */}
         <div className="bg-green-600 rounded-lg p-6 mb-8 shadow-md flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Welcome, Car Owner!</h1>
+            <h1 className="text-3xl font-bold text-white">Welcome, {profile?.full_name || 'Car Owner'}!</h1>
             <p className="text-green-100 mt-2">Here's your car care hub.</p>
           </div>
           <span className="bg-white text-green-600 px-4 py-2 rounded-full font-semibold shadow">Owner</span>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="mb-8">
+          <nav className="flex space-x-4">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'overview'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab('vehicles')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'vehicles'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              My Vehicles
+            </button>
+            <button
+              onClick={() => setActiveTab('documents')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'documents'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Documents
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'analytics'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Analytics
+            </button>
+          </nav>
         </div>
 
         {/* Dashboard Actions */}
@@ -106,81 +157,90 @@ export default function OwnerDashboard() {
           </div>
         </div>
 
-        {/* Recent Requests */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">My Repair Requests</h2>
-          {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
-          ) : error ? (
-            <div className="text-red-600 text-center py-8">{error}</div>
-          ) : requests.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No repair requests yet. 
-              <Link href="/report" className="text-blue-600 ml-1 underline">
-                Create your first repair request
-              </Link>
+        {/* Content Sections */}
+        {activeTab === 'overview' && (
+          <div className="space-y-8">
+            {/* Recent Requests */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold mb-4">My Repair Requests</h2>
+              {loading ? (
+                <div className="text-center py-8 text-gray-500">Loading...</div>
+              ) : error ? (
+                <div className="text-red-600 text-center py-8">{error}</div>
+              ) : requests.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No repair requests yet. 
+                  <Link href="/report" className="text-blue-600 ml-1 underline">
+                    Create your first repair request
+                  </Link>
+                </div>
+              ) : (
+                <ul className="divide-y divide-gray-200">
+                  {requests.map((req) => (
+                    <li key={req.id} className="py-4 flex flex-col md:flex-row md:justify-between md:items-center">
+                      <div>
+                        <Link 
+                          href={`/dashboard/owner/requests/${req.id}`}
+                          className="font-semibold text-gray-900 hover:text-blue-600"
+                        >
+                          {req.issue_type} - {req.car_make} {req.car_model} ({req.car_year})
+                        </Link>
+                        <div className="text-gray-500 text-sm mb-1">{req.description}</div>
+                        <div className="text-xs text-gray-400">Submitted: {new Date(req.created_at).toLocaleDateString()}</div>
+                      </div>
+                      <div className="mt-2 md:mt-0 flex items-center gap-2">
+                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                          req.status === 'open' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : req.status === 'in_progress'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : req.status === 'completed'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {req.status.replace('_', ' ').charAt(0).toUpperCase() + req.status.replace('_', ' ').slice(1)}
+                        </span>
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                          {req.quote_count} Quotes
+                        </span>
+                        <Link 
+                          href={`/dashboard/owner/requests/${req.id}`}
+                          className="ml-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          ) : (
-            <ul className="divide-y divide-gray-200">
-              {requests.map((req) => (
-                <li key={req.id} className="py-4 flex flex-col md:flex-row md:justify-between md:items-center">
-                  <div>
-                    <Link 
-                      href={`/dashboard/owner/requests/${req.id}`}
-                      className="font-semibold text-gray-900 hover:text-blue-600"
-                    >
-                      {req.issue_type} - {req.car_make} {req.car_model} ({req.car_year})
-                    </Link>
-                    <div className="text-gray-500 text-sm mb-1">{req.description}</div>
-                    <div className="text-xs text-gray-400">Submitted: {new Date(req.created_at).toLocaleDateString()}</div>
-                  </div>
-                  <div className="mt-2 md:mt-0 flex items-center gap-2">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                      req.status === 'open' 
-                        ? 'bg-blue-100 text-blue-800' 
-                        : req.status === 'in_progress'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : req.status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {req.status.replace('_', ' ').charAt(0).toUpperCase() + req.status.replace('_', ' ').slice(1)}
-                    </span>
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                      {req.quote_count} Quotes
-                    </span>
-                    <Link 
-                      href={`/dashboard/owner/requests/${req.id}`}
-                      className="ml-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
 
-        {/* Profile Summary */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Profile Summary</h2>
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-500">
-              {profile?.full_name?.charAt(0) || 'U'}
-            </div>
-            <div>
-              <div className="font-semibold">{profile?.full_name || 'Update Your Profile'}</div>
-              <div className="text-gray-500 text-sm">{profile?.email || ''}</div>
-              <div className="text-gray-500 text-sm">Member since {profile ? new Date(profile.created_at).getFullYear() : new Date().getFullYear()}</div>
-            </div>
-            <div className="ml-auto">
-              <Link href="/dashboard/owner/profile" className="text-blue-600 hover:underline text-sm">
-                Edit Profile
-              </Link>
+            {/* Profile Summary */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold mb-4">Profile Summary</h2>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-500">
+                  {profile?.full_name?.charAt(0) || 'U'}
+                </div>
+                <div>
+                  <div className="font-semibold">{profile?.full_name || 'Update Your Profile'}</div>
+                  <div className="text-gray-500 text-sm">{profile?.email || ''}</div>
+                  <div className="text-gray-500 text-sm">Member since {profile ? new Date(profile.created_at).getFullYear() : new Date().getFullYear()}</div>
+                </div>
+                <div className="ml-auto">
+                  <Link href="/dashboard/owner/profile" className="text-blue-600 hover:underline text-sm">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {activeTab === 'vehicles' && <VehicleManagement />}
+        {activeTab === 'documents' && <DocumentManagement />}
+        {activeTab === 'analytics' && <AnalyticsDashboard />}
       </div>
     </div>
   );

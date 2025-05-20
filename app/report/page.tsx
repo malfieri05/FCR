@@ -1,9 +1,11 @@
 // app/report/page.tsx
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import Modal from '../components/Modal';
+import Link from 'next/link';
 
 export default function ReportPage() {
   const [formData, setFormData] = useState({
@@ -21,7 +23,17 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (success) {
+      setShowToast(true);
+      const timer = setTimeout(() => setShowToast(false), 1800);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +50,9 @@ export default function ReportPage() {
       // Check if user is logged in
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        throw new Error('You must be logged in to submit a repair request');
+        setShowAuthModal(true);
+        setLoading(false);
+        return;
       }
       
       // Check if user is a car owner
@@ -144,6 +158,40 @@ export default function ReportPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Toast Popup */}
+      {showToast && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold animate-fade-in">
+            Repair request submitted! Redirecting to dashboard...
+          </div>
+        </div>
+      )}
+      <Modal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Create an Account to Continue"
+        description="Sign up or log in to submit your repair request, track progress, and get the best quotes from trusted mechanics."
+        actions={
+          <div className="mt-6 flex flex-row justify-center items-center gap-x-6">
+            <div className="flex justify-center">
+              <a
+                href="/auth/signup"
+                className="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+              >
+                Create Account
+              </a>
+            </div>
+            <div className="flex justify-center">
+              <a
+                href="/auth/signin"
+                className="border border-blue-600 text-blue-600 px-5 py-2 rounded-md font-semibold hover:bg-blue-50 transition"
+              >
+                Sign In
+              </a>
+            </div>
+          </div>
+        }
+      />
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-4">Submit Your Repair Request</h1>
@@ -151,12 +199,6 @@ export default function ReportPage() {
             Get competitive quotes from trusted mechanics in your area. Upload your diagnostic report or describe the issue, and let the best mechanics bid on your repair.
           </p>
         </div>
-
-        {success && (
-          <div className="bg-green-50 text-green-600 p-4 rounded-lg text-center mb-6">
-            Your repair request has been submitted successfully! You will be redirected to your dashboard.
-          </div>
-        )}
 
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg text-center mb-6">
@@ -348,6 +390,15 @@ export default function ReportPage() {
           </form>
         </div>
       </div>
+      <style jsx global>{`
+        @keyframes fade-in {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+      `}</style>
     </div>
   );
 }

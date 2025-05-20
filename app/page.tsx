@@ -17,21 +17,21 @@ export default function Home() {
       
       <div className="relative z-10">
         {/* Hero Section */}
-        <div className="relative px-6 pt-4 lg:px-8">
+        <div className="relative px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl py-6 sm:py-10 lg:py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
               <div className="text-left">
                 <div className="inline-flex items-center px-3 py-1.5 mb-6 rounded-full bg-blue-50 border border-blue-100">
                   <span className="inline-block w-2 h-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
                   <span className="text-xs font-medium text-blue-700">Disrupting The Repair Industry</span>
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight text-gray-900 leading-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight text-gray-900 leading-tight">
                   <span className="block">Get Fair Car</span>
                   <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Repair Quotes</span>
                 </h1>
                 
-                <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-xl leading-relaxed">
+                <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-600 max-w-xl leading-relaxed">
                   Connect with trusted mechanics in your area. Get competitive quotes, compare prices, and choose the best service for your car repair needs.
                 </p>
                 
@@ -97,89 +97,86 @@ export default function Home() {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-gradient-to-b from-white to-blue-50/50 py-12">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="bg-gradient-to-b from-white to-blue-50/50 py-8 sm:py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
               <div className="text-center">
-                <div className="font-bold text-4xl text-blue-700">15k+</div>
-                <div className="text-sm text-gray-500 mt-1">Mechanics</div>
+                <div className="font-bold text-2xl sm:text-4xl text-blue-700">15k+</div>
+                <div className="text-xs sm:text-sm text-gray-500 mt-1">Mechanics</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-4xl text-blue-700">48K+</div>
-                <div className="text-sm text-gray-500 mt-1">Car Owners</div>
+                <div className="font-bold text-2xl sm:text-4xl text-blue-700">48K+</div>
+                <div className="text-xs sm:text-sm text-gray-500 mt-1">Car Owners</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-4xl text-blue-700">$2.4M</div>
-                <div className="text-sm text-gray-500 mt-1">Saved on Repairs</div>
+                <div className="font-bold text-2xl sm:text-4xl text-blue-700">$2.4M</div>
+                <div className="text-xs sm:text-sm text-gray-500 mt-1">Saved on Repairs</div>
               </div>
               <div className="text-center">
-                <div className="font-bold text-4xl text-blue-700">98%</div>
-                <div className="text-sm text-gray-500 mt-1">Satisfaction Rate</div>
+                <div className="font-bold text-2xl sm:text-4xl text-blue-700">98%</div>
+                <div className="text-xs sm:text-sm text-gray-500 mt-1">Satisfaction Rate</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="bg-white py-24 sm:py-32">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
-              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 mb-6">
-                <span className="text-sm font-medium text-blue-700">How It Works</span>
-              </div>
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <div className="py-12 sm:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl lg:text-center mb-12 sm:mb-16">
+              <h2 className="text-base font-semibold leading-7 text-blue-600">Features</h2>
+              <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 Everything you need to get your car fixed
-              </h2>
-              <p className="mt-6 text-xl leading-8 text-gray-600">
-                Our platform makes it easy to find the right mechanic for your car repair needs.
+              </p>
+              <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-8 text-gray-600">
+                Our platform makes it easy to find and compare mechanics, get quotes, and book services.
               </p>
             </div>
-            <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-              <dl className="grid max-w-xl grid-cols-1 gap-x-12 gap-y-16 lg:max-w-none lg:grid-cols-3">
-                <div className="relative p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
-                  <dt className="flex flex-col gap-y-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <svg className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M11.2929 2.70711C11.6834 2.31658 12.3166 2.31658 12.7071 2.70711L15.2929 5.29289C15.6834 5.68342 15.6834 6.31658 15.2929 6.70711L12.7071 9.29289C12.3166 9.68342 11.6834 9.68342 11.2929 9.29289L8.70711 6.70711C8.31658 6.31658 8.31658 5.68342 8.70711 5.29289L11.2929 2.70711Z" />
-                        <path d="M11.2929 14.7071C11.6834 14.3166 12.3166 14.3166 12.7071 14.7071L15.2929 17.2929C15.6834 17.6834 15.6834 18.3166 15.2929 18.7071L12.7071 21.2929C12.3166 21.6834 11.6834 21.6834 11.2929 21.2929L8.70711 18.7071C8.31658 18.3166 8.31658 17.6834 8.70711 17.2929L11.2929 14.7071Z" />
-                        <path d="M2.70711 8.70711C2.31658 8.31658 2.31658 7.68342 2.70711 7.29289L5.29289 4.70711C5.68342 4.31658 6.31658 4.31658 6.70711 4.70711L9.29289 7.29289C9.68342 7.68342 9.68342 8.31658 9.29289 8.70711L6.70711 11.2929C6.31658 11.6834 5.68342 11.6834 5.29289 11.2929L2.70711 8.70711Z" />
-                        <path d="M14.7071 8.70711C14.3166 8.31658 14.3166 7.68342 14.7071 7.29289L17.2929 4.70711C17.6834 4.31658 18.3166 4.31658 18.7071 4.70711L21.2929 7.29289C21.6834 7.68342 21.6834 8.31658 21.2929 8.70711L18.7071 11.2929C18.3166 11.6834 17.6834 11.6834 17.2929 11.2929L14.7071 8.70711Z" />
-                      </svg>
-                    </div>
-                    <span className="text-xl font-semibold leading-7 text-gray-900">Submit Your Issue</span>
-                  </dt>
-                  <dd className="mt-4 text-base leading-7 text-gray-600">
-                    <p>Describe your car's problem or upload diagnostic reports. Our AI-powered system categorizes your issue for accurate matching with specialists.</p>
-                  </dd>
-                </div>
-                <div className="relative p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
-                  <dt className="flex flex-col gap-y-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <svg className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className="text-xl font-semibold leading-7 text-gray-900">Get Multiple Quotes</span>
-                  </dt>
-                  <dd className="mt-4 text-base leading-7 text-gray-600">
-                    <p>Local mechanics will review your case and send you their best offers. Compare prices, reviews, and service options all in one place.</p>
-                  </dd>
-                </div>
-                <div className="relative p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
-                  <dt className="flex flex-col gap-y-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <svg className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                      </svg>
-                    </div>
-                    <span className="text-xl font-semibold leading-7 text-gray-900">Choose Your Mechanic</span>
-                  </dt>
-                  <dd className="mt-4 text-base leading-7 text-gray-600">
-                    <p>Select the mechanic that best fits your needs. Book the service and get your car fixed with confidence, backed by our satisfaction guarantee.</p>
-                  </dd>
-                </div>
-              </dl>
-            </div>
+            
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-3">
+              <div className="relative p-6 sm:p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
+                <dt className="flex flex-col gap-y-4">
+                  <div className="flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <svg className="h-6 sm:h-8 w-6 sm:w-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11.2929 2.70711C11.6834 2.31658 12.3166 2.31658 12.7071 2.70711L15.2929 5.29289C15.6834 5.68342 15.6834 6.31658 15.2929 6.70711L12.7071 9.29289C12.3166 9.68342 11.6834 9.68342 11.2929 9.29289L8.70711 6.70711C8.31658 6.31658 8.31658 5.68342 8.70711 5.29289L11.2929 2.70711Z" />
+                      <path d="M11.2929 14.7071C11.6834 14.3166 12.3166 14.3166 12.7071 14.7071L15.2929 17.2929C15.6834 17.6834 15.6834 18.3166 15.2929 18.7071L12.7071 21.2929C12.3166 21.6834 11.6834 21.6834 11.2929 21.2929L8.70711 18.7071C8.31658 18.3166 8.31658 17.6834 8.70711 17.2929L11.2929 14.7071Z" />
+                      <path d="M2.70711 8.70711C2.31658 8.31658 2.31658 7.68342 2.70711 7.29289L5.29289 4.70711C5.68342 4.31658 6.31658 4.31658 6.70711 4.70711L9.29289 7.29289C9.68342 7.68342 9.68342 8.31658 9.29289 8.70711L6.70711 11.2929C6.31658 11.6834 5.68342 11.6834 5.29289 11.2929L2.70711 8.70711Z" />
+                      <path d="M14.7071 8.70711C14.3166 8.31658 14.3166 7.68342 14.7071 7.29289L17.2929 4.70711C17.6834 4.31658 18.3166 4.31658 18.7071 4.70711L21.2929 7.29289C21.6834 7.68342 21.6834 8.31658 21.2929 8.70711L18.7071 11.2929C18.3166 11.6834 17.6834 11.6834 17.2929 11.2929L14.7071 8.70711Z" />
+                    </svg>
+                  </div>
+                  <span className="text-lg sm:text-xl font-semibold leading-7 text-gray-900">Submit Your Issue</span>
+                </dt>
+                <dd className="mt-4 text-sm sm:text-base leading-7 text-gray-600">
+                  <p>Describe your car's problem or upload diagnostic reports. Our AI-powered system categorizes your issue for accurate matching with specialists.</p>
+                </dd>
+              </div>
+              <div className="relative p-6 sm:p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
+                <dt className="flex flex-col gap-y-4">
+                  <div className="flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <svg className="h-6 sm:h-8 w-6 sm:w-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-lg sm:text-xl font-semibold leading-7 text-gray-900">Get Multiple Quotes</span>
+                </dt>
+                <dd className="mt-4 text-sm sm:text-base leading-7 text-gray-600">
+                  <p>Local mechanics will review your case and send you their best offers. Compare prices, reviews, and service options all in one place.</p>
+                </dd>
+              </div>
+              <div className="relative p-6 sm:p-8 rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1">
+                <dt className="flex flex-col gap-y-4">
+                  <div className="flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <svg className="h-6 sm:h-8 w-6 sm:w-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                  </div>
+                  <span className="text-lg sm:text-xl font-semibold leading-7 text-gray-900">Choose Your Mechanic</span>
+                </dt>
+                <dd className="mt-4 text-sm sm:text-base leading-7 text-gray-600">
+                  <p>Select the mechanic that best fits your needs. Book the service and get your car fixed with confidence, backed by our satisfaction guarantee.</p>
+                </dd>
+              </div>
+            </dl>
           </div>
         </div>
         
@@ -264,7 +261,7 @@ export default function Home() {
         </div>
         
         {/* CTA Section */}
-        <div className="relative bg-blue-700 py-24">
+        <div className="relative bg-blue-700 py-16 sm:py-24">
           <div className="absolute inset-0 overflow-hidden">
             <svg className="absolute right-0 top-0 translate-x-1/2 -translate-y-1/4 transform blur-3xl" viewBox="0 0 1108 632" aria-hidden="true">
               <path fill="url(#h)" fillOpacity=".25" d="M235.233 402.55c100.932-33.88 195.583-71.38 295.99-36.11 100.415 35.26 138.74 111.13 224.88 142.16 86.137 31.03 188.386-.29 263.902-59.19 75.516-58.89 125.08-158.2 66.556-220.99-58.526-62.77-205.23-58.06-283.26-112.29-78.03-54.24-86.267-176.86-180.794-208.37-94.526-31.5-275.266 29.6-375.645 100.53-100.378 70.94-110.194 151.7-107.781 233.27 2.413 81.57 16.737 163.84 96.152 160.98Z" />
@@ -278,23 +275,23 @@ export default function Home() {
             </defs>
           </div>
           
-          <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Ready to save on your next car repair?
               </h2>
-              <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-blue-100">
+              <p className="mx-auto mt-4 sm:mt-6 max-w-xl text-base sm:text-lg leading-8 text-blue-100">
                 Join thousands of car owners who have saved money and found quality mechanics through our platform.
               </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6">
+              <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6">
                 <a
                   href="/report"
-                  className="rounded-xl bg-white px-6 py-4 text-base font-semibold text-blue-700 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all duration-300"
+                  className="w-full sm:w-auto rounded-xl bg-white px-6 py-4 text-base font-semibold text-blue-700 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all duration-300"
                 >
                   Get Started Today
                 </a>
-                <a href="/how-it-works" className="text-base font-semibold text-white hover:text-blue-100 transition-colors">
-                  Learn more <span aria-hidden="true">→</span>
+                <a href="/learn-more" className="w-full sm:w-auto text-center text-base font-semibold text-white hover:text-blue-100 transition-colors">
+                  How it works <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>

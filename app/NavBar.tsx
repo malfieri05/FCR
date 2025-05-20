@@ -7,9 +7,11 @@ import { BellIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
+  { href: '/', label: 'Home', separator: true },
+  { href: '/dashboard/owner', label: 'Dashboard' },
   { href: '/report', label: 'Report Issue' },
   { href: '/findmechanics', label: 'Find Mechanics' },
+  { href: '/dashboard/owner/price-comparison', label: 'Price Comparison' },
 ];
 
 export default function NavBar() {
@@ -163,19 +165,26 @@ export default function NavBar() {
             <Link href="/" className="flex-shrink-0 flex items-center">
               <span className="text-blue-600 font-bold text-xl tracking-tight">Fair Car Repair</span>
             </Link>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`nav-item inline-flex items-center px-1 pt-1 text-sm font-medium h-16 transition-all duration-200 ${
-                    pathname === link.href
-                      ? 'border-b-[3px] border-blue-600 text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-blue-500/20 after:blur-sm'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {link.label}
-                </Link>
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-0 items-center">
+              {navLinks.map((link, idx) => (
+                <>
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`nav-item inline-flex items-center px-3 pt-1 text-sm font-medium h-16 transition-all duration-200 ${
+                      pathname === link.href
+                        ? 'border-b-[3px] border-blue-600 text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-blue-500/20 after:blur-sm'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                  {link.separator && (
+                    <div className="mx-4 flex items-center" aria-hidden="true">
+                      <div className="h-10 border-l border-gray-300" style={{marginTop: 2, marginBottom: 2}} />
+                    </div>
+                  )}
+                </>
               ))}
             </div>
           </div>
@@ -269,28 +278,6 @@ export default function NavBar() {
                       onMouseLeave={handleDropdownMouseLeave}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <Link
-                        href={profileUrl}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                      >
-                        Dashboard
-                      </Link>
-                      {userType === 'mechanic' && (
-                        <Link
-                          href="/dashboard/mechanic/open-jobs"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                        >
-                          Open Jobs
-                        </Link>
-                      )}
-                      {userType === 'car_owner' && (
-                        <Link
-                          href="/dashboard/owner/price-comparison"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                        >
-                          Price Comparison
-                        </Link>
-                      )}
                       <Link
                         href="/messages"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"

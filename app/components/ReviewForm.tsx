@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Modal from './Modal';
 
 interface ReviewFormProps {
   mechanicId: string;
@@ -13,6 +14,7 @@ export default function ReviewForm({ mechanicId, onReviewSubmitted }: ReviewForm
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +30,9 @@ export default function ReviewForm({ mechanicId, onReviewSubmitted }: ReviewForm
       // Get the current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        throw new Error('You must be logged in to submit a review');
+        setShowAuthModal(true);
+        setSubmitting(false);
+        return;
       }
 
       // Submit the review
@@ -75,57 +79,84 @@ export default function ReviewForm({ mechanicId, onReviewSubmitted }: ReviewForm
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Rating
-        </label>
-        <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              className="text-2xl focus:outline-none"
+    <>
+      <Modal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Create an Account to Continue"
+        description="Sign up or log in to submit a review, track your experiences, and help others choose the best mechanics."
+        mascotUrl="/mascot.png"
+        valueProp="Join thousands of car owners saving on repairs."
+        legal="By continuing, you agree to our Terms."
+        actions={
+          <>
+            <a
+              href="/auth/signup"
+              className="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 transition shadow-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
-              <span className={star <= rating ? 'text-yellow-400' : 'text-gray-300'}>
-                ★
-              </span>
-            </button>
-          ))}
+              Create Account
+            </a>
+            <a
+              href="/auth/signin"
+              className="border border-blue-600 text-blue-600 px-5 py-2 rounded-md font-semibold hover:bg-blue-50 transition focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              Sign In
+            </a>
+          </>
+        }
+      />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Rating
+          </label>
+          <div className="flex gap-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className="text-2xl focus:outline-none"
+              >
+                <span className={star <= rating ? 'text-yellow-400' : 'text-gray-300'}>
+                  ★
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
-          Your Review
-        </label>
-        <textarea
-          id="comment"
-          rows={4}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          placeholder="Share your experience with this mechanic..."
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          required
-        />
-      </div>
+        <div>
+          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+            Your Review
+          </label>
+          <textarea
+            id="comment"
+            rows={4}
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            placeholder="Share your experience with this mechanic..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            required
+          />
+        </div>
 
-      {error && (
-        <div className="text-red-600 text-sm">{error}</div>
-      )}
+        {error && (
+          <div className="text-red-600 text-sm">{error}</div>
+        )}
 
-      <button
-        type="submit"
-        disabled={submitting || rating === 0}
-        className={`w-full px-4 py-2 rounded-lg text-white font-semibold
-          ${submitting || rating === 0
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-      >
-        {submitting ? 'Submitting...' : 'Submit Review'}
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={submitting || rating === 0}
+          className={`w-full px-4 py-2 rounded-lg text-white font-semibold
+            ${submitting || rating === 0
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+        >
+          {submitting ? 'Submitting...' : 'Submit Review'}
+        </button>
+      </form>
+    </>
   );
 } 
